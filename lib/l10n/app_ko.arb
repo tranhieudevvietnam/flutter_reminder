@@ -1,0 +1,16 @@
+{
+  "helloWorld": "안녕하세요 세계!",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  },
+  "hello": "안녕하세요 {yourName}",
+  "@hello": {
+    "description": "A message with a single parameter",
+    "placeholders": {
+      "yourName": {
+        "type": "String",
+        "example": "Hieu"
+      }
+    }
+  }
+}
