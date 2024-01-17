@@ -34,6 +34,8 @@ dependencies:
     sdk: flutter
   flutter_component:
     path: /Volumes/coi-ssd/Github/flutter_component
+  swipeable_tile:
+    git: https://github.com/tranhieudevvietnam/flutter_swipeable_tile.git
 
   flutter_svg: ^2.0.5
 
@@ -82,14 +84,13 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
-    - assets/fonts/
   fonts:
-    - family: MPLUSRounded1c-Regular
+    - family: Regular
       fonts:
-        - asset: assets/fonts/MPLUSRounded1c-Regular.ttf
-    - family: MPLUSRounded1c-Medium
+        - asset: assets/fonts/Roboto-Regular.ttf
+    - family: Medium
       fonts:
-        - asset: assets/fonts/MPLUSRounded1c-Medium.ttf
-    - family: MPLUSRounded1c-Bold
+        - asset: assets/fonts/Roboto-Medium.ttf
+    - family: Bold
       fonts:
-        - asset: assets/fonts/MPLUSRounded1c-Bold.ttf
+        - asset: assets/fonts/Roboto-Bold.ttf

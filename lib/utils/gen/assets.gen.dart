@@ -11,64 +11,44 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart';
 
-class $AssetsFontsGen {
-  const $AssetsFontsGen();
-
-  /// File path: assets/fonts/MPLUSRounded1c-Black.ttf
-  String get mPLUSRounded1cBlack => 'assets/fonts/MPLUSRounded1c-Black.ttf';
-
-  /// File path: assets/fonts/MPLUSRounded1c-Bold.ttf
-  String get mPLUSRounded1cBold => 'assets/fonts/MPLUSRounded1c-Bold.ttf';
-
-  /// File path: assets/fonts/MPLUSRounded1c-ExtraBold.ttf
-  String get mPLUSRounded1cExtraBold =>
-      'assets/fonts/MPLUSRounded1c-ExtraBold.ttf';
-
-  /// File path: assets/fonts/MPLUSRounded1c-Light.ttf
-  String get mPLUSRounded1cLight => 'assets/fonts/MPLUSRounded1c-Light.ttf';
-
-  /// File path: assets/fonts/MPLUSRounded1c-Medium.ttf
-  String get mPLUSRounded1cMedium => 'assets/fonts/MPLUSRounded1c-Medium.ttf';
-
-  /// File path: assets/fonts/MPLUSRounded1c-Regular.ttf
-  String get mPLUSRounded1cRegular => 'assets/fonts/MPLUSRounded1c-Regular.ttf';
-
-  /// File path: assets/fonts/MPLUSRounded1c-Thin.ttf
-  String get mPLUSRounded1cThin => 'assets/fonts/MPLUSRounded1c-Thin.ttf';
-
-  /// List of all assets
-  List<String> get values => [
-        mPLUSRounded1cBlack,
-        mPLUSRounded1cBold,
-        mPLUSRounded1cExtraBold,
-        mPLUSRounded1cLight,
-        mPLUSRounded1cMedium,
-        mPLUSRounded1cRegular,
-        mPLUSRounded1cThin
-      ];
-}
-
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
+  /// File path: assets/icons/add.svg
+  SvgGenImage get add => const SvgGenImage('assets/icons/add.svg');
+
   /// File path: assets/icons/all.svg
   SvgGenImage get all => const SvgGenImage('assets/icons/all.svg');
+
+  /// File path: assets/icons/arrow_right.svg
+  SvgGenImage get arrowRight =>
+      const SvgGenImage('assets/icons/arrow_right.svg');
 
   /// File path: assets/icons/calender_origen.svg
   SvgGenImage get calenderOrigen =>
       const SvgGenImage('assets/icons/calender_origen.svg');
 
+  /// File path: assets/icons/delete.svg
+  SvgGenImage get delete => const SvgGenImage('assets/icons/delete.svg');
+
+  /// File path: assets/icons/icon_column.svg
+  SvgGenImage get iconColumn =>
+      const SvgGenImage('assets/icons/icon_column.svg');
+
+  /// File path: assets/icons/info.svg
+  SvgGenImage get info => const SvgGenImage('assets/icons/info.svg');
+
   /// File path: assets/icons/search.svg
   SvgGenImage get search => const SvgGenImage('assets/icons/search.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values => [all, calenderOrigen, search];
+  List<SvgGenImage> get values =>
+      [add, all, arrowRight, calenderOrigen, delete, iconColumn, info, search];
 }
 
 class Assets {
   Assets._();
 
-  static const $AssetsFontsGen fonts = $AssetsFontsGen();
   static const $AssetsIconsGen icons = $AssetsIconsGen();
 }
 

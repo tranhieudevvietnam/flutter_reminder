@@ -10,12 +10,12 @@
 class FontFamily {
   FontFamily._();
 
-  /// Font family: MPLUSRounded1c-Bold
-  static const String mPLUSRounded1cBold = 'MPLUSRounded1c-Bold';
+  /// Font family: Bold
+  static const String bold = 'Bold';
 
-  /// Font family: MPLUSRounded1c-Medium
-  static const String mPLUSRounded1cMedium = 'MPLUSRounded1c-Medium';
+  /// Font family: Medium
+  static const String medium = 'Medium';
 
-  /// Font family: MPLUSRounded1c-Regular
-  static const String mPLUSRounded1cRegular = 'MPLUSRounded1c-Regular';
+  /// Font family: Regular
+  static const String regular = 'Regular';
 }
