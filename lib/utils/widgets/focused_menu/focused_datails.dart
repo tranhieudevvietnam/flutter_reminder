@@ -3,9 +3,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_reminder/utils/gen/colors.gen.dart';
 
-typedef BuildChildMenu = Widget Function(BuildContext context, Function() onClose);
+typedef BuildChildMenu = Widget Function(BuildContext context, GlobalKey globalKey, Function() onClose);
 
-class FocusedDetails extends StatelessWidget {
+class FocusedDetails extends StatefulWidget {
   final BuildChildMenu childMenu;
   final BoxDecoration? menuBoxDecoration;
   final Offset childOffset;
@@ -22,13 +22,37 @@ class FocusedDetails extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<FocusedDetails> createState() => _FocusedDetailsState();
+}
+
+class _FocusedDetailsState extends State<FocusedDetails> {
+  double heightMenu = 140;
+  GlobalKey globalKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _getSizeMenu();
+    });
+  }
+
+  void _getSizeMenu() {
+    RenderBox renderBox = globalKey.currentContext!.findRenderObject() as RenderBox;
+    Size size = renderBox.size;
+    setState(() {
+      heightMenu = size.height + 20;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    double heightMenu = 140;
 
-    final leftOffset = childOffset.dx;
-    final topOffset =
-        (childOffset.dy + heightMenu + childSize!.height) < size.height ? childOffset.dy + childSize!.height : childOffset.dy - heightMenu;
+    final leftOffset = widget.childOffset.dx;
+    final topOffset = (widget.childOffset.dy + heightMenu + widget.childSize!.height) < size.height
+        ? widget.childOffset.dy + widget.childSize!.height
+        : widget.childOffset.dy - heightMenu;
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Stack(
@@ -45,13 +69,14 @@ class FocusedDetails extends StatelessWidget {
                 ),
               )),
           Positioned(
-              top: childOffset.dy,
-              left: childOffset.dx,
+              top: widget.childOffset.dy,
+              left: widget.childOffset.dx,
               child: GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
                   },
-                  child: AbsorbPointer(absorbing: true, child: SizedBox(width: childSize!.width, height: childSize!.height, child: child)))),
+                  child: AbsorbPointer(
+                      absorbing: true, child: SizedBox(width: widget.childSize!.width, height: widget.childSize!.height, child: widget.child)))),
           Positioned(
             top: topOffset,
             left: leftOffset,
@@ -66,7 +91,7 @@ class FocusedDetails extends StatelessWidget {
               },
               tween: Tween(begin: 0.0, end: 1.0),
               child: Padding(
-                padding: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(top: 10, bottom: 10),
                 child: TweenAnimationBuilder(
                     builder: (context, dynamic value, child) {
                       return Transform(
@@ -77,8 +102,9 @@ class FocusedDetails extends StatelessWidget {
                     },
                     tween: Tween(begin: 1.0, end: 0.0),
                     duration: const Duration(milliseconds: 200),
-                    child: childMenu.call(
+                    child: widget.childMenu.call(
                       context,
+                      globalKey,
                       () {
                         Navigator.pop(context);
                       },

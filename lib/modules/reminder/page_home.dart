@@ -1,7 +1,10 @@
+import 'package:dynamic_icon_flutter/dynamic_icon_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_component/widgets/widget_animation_click.dart';
 import 'package:flutter_reminder/modules/reminder/data/data_reminder.dart';
 import 'package:flutter_reminder/modules/reminder/widgets/widget_container_count.dart';
+import 'package:flutter_reminder/utils/components/cache/component_cache_data.dart';
 import 'package:flutter_reminder/utils/gen/assets.gen.dart';
 import 'package:flutter_reminder/utils/gen/colors.gen.dart';
 import 'package:flutter_reminder/utils/gen/style_font.dart';
@@ -31,6 +34,9 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
     DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
     DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
     DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
+    DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
+    DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
+    DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
   ];
 
   ScrollController scrollController = ScrollController();
@@ -42,12 +48,10 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
   @override
   void initState() {
     scrollController.addListener(() {
-      debugPrint("${scrollController.position.pixels}");
       if (scrollController.position.pixels < 0) {
         opacityAppBar.value = 0.0;
       } else {
         final valueTemp = scrollController.position.pixels / 10;
-
         if (valueTemp > 1) {
           opacityAppBar.value = 1.0;
         } else {
@@ -62,6 +66,8 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
     });
 
     super.initState();
+    initLogoApp();
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (scrollController.position.pixels >= scrollController.position.maxScrollExtent) {
         opacityBottom.value = 0.0;
@@ -71,9 +77,27 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
     });
   }
 
+  initLogoApp() async {
+    const List<String> list = [
+      "ic_launcher_cn_18",
+      "ic_launcher_cn_19",
+      "MainActivity",
+    ];
+    try {
+      if (ComponentCacheData.instant.pref.getString("icon") == list[0]) return;
+      await ComponentCacheData.instant.pref.setString("icon", list[0]);
+      await DynamicIconFlutter.setIcon(icon: list[0], listAvailableIcon: list);
+      debugPrint("App icon change successful");
+      return;
+    } on PlatformException catch (e) {
+      // await DynamicIconFlutter.setAlternateIconName(null);
+      debugPrint("Change app icon back to default");
+      return;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final paddingTop = MediaQuery.of(context).padding.top;
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: eventCloseShowMores.isNotEmpty
@@ -241,8 +265,9 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
                                   ],
                                 ),
                               ),
-                              childMenu: (ctx, onClose) {
+                              childMenu: (ctx, globalKey, onClose) {
                                 return Container(
+                                  key: globalKey,
                                   width: ctx.screenSize().width / 2,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(16),
