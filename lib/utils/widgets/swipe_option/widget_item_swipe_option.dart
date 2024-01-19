@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_component/flutter_component.dart';
 import 'package:flutter_reminder/utils/widgets/swipe_option/card_tile.dart';
-import 'package:swipeable_tile/swipeable_tile.dart';
+
+typedef BuildWidget = Widget Function(BuildContext context, GlobalKey? globalKey);
 
 class WidgetItemSwipeOption extends StatefulWidget {
   const WidgetItemSwipeOption({
@@ -13,7 +15,7 @@ class WidgetItemSwipeOption extends StatefulWidget {
     required this.callBackClose,
   }) : super(key: key);
   final Widget child;
-  final Widget menu;
+  final BuildWidget menu;
   final double borderRadius;
   final Color color;
   final Function(Function()? event) callBackClose;
@@ -26,11 +28,9 @@ class _WidgetItemSwipeOptionState extends State<WidgetItemSwipeOption> with Tick
   AnimationController? _moveController;
   late Animation<Offset> _moveAnimation;
 
-  AnimationController? _resizeController;
-  Animation<double>? _resizeAnimation;
-
   double _dragExtent = 0.0;
-  bool _dragUnderway = false;
+
+  GlobalKey globalKeyMenu = GlobalKey();
 
   @override
   void initState() {
@@ -47,7 +47,6 @@ class _WidgetItemSwipeOptionState extends State<WidgetItemSwipeOption> with Tick
           ? () {
               _moveController!.reverse();
               // _dragExtent = 0.0;
-              _dragUnderway = false;
               setState(() {
                 _updateMoveAnimation();
               });
@@ -61,7 +60,6 @@ class _WidgetItemSwipeOptionState extends State<WidgetItemSwipeOption> with Tick
     if (status == AnimationStatus.dismissed) {
       _dragExtent = 0.0;
       // _moveController!.value = .0;
-      _dragUnderway = false;
       setState(() {
         _updateMoveAnimation();
       });
@@ -71,7 +69,13 @@ class _WidgetItemSwipeOptionState extends State<WidgetItemSwipeOption> with Tick
   }
 
   void _updateMoveAnimation() {
-    final double endOffsetX = _dragExtent.sign != 0 ? -.25 : _dragExtent.sign;
+    double valueMenu = .25;
+
+    try {
+      valueMenu = _getSizeMenu().width / _overallDragAxisExtent;
+    } catch (e) {}
+
+    final double endOffsetX = _dragExtent.sign != 0 ? -valueMenu : _dragExtent.sign;
 
     ///TODO: Changed: DONE
     _moveAnimation = _moveController!.drive(
@@ -83,16 +87,7 @@ class _WidgetItemSwipeOptionState extends State<WidgetItemSwipeOption> with Tick
   }
 
   void _handleDragStart(DragStartDetails details) {
-    _dragUnderway = true;
-    // if (_moveController!.isAnimating) {
-    //   _dragExtent = _moveController!.value * _overallDragAxisExtent * _dragExtent.sign;
-    //   // _moveController!.stop();
-    // }
-
-    // else {
-    //   _dragExtent = 0.0;
-    //   _moveController!.value = 0.0;
-    // }
+    
     setState(() {
       _updateMoveAnimation();
     });
@@ -109,18 +104,23 @@ class _WidgetItemSwipeOptionState extends State<WidgetItemSwipeOption> with Tick
         _updateMoveAnimation();
       });
     }
-    final value = _dragExtent.abs() / _overallDragAxisExtent;
+    final value = _dragExtent.abs() / (_overallDragAxisExtent / 4);
     if (!_moveController!.isAnimating) {
-      // debugPrint(" _dragExtent ===>$_dragExtent");
-      // debugPrint(" _dragExtent.abs() / _overallDragAxisExtent ===>$value");
+      debugPrint(" _dragExtent ===>$_dragExtent");
+      debugPrint(" _dragExtent.abs() / _overallDragAxisExtent ===>$value");
       _moveController!.value = value;
     }
   }
 
   Future<void> _handleDragEnd(DragEndDetails details) async {
-    _dragUnderway = false;
     // debugPrint("_moveController!.value===> ${_moveController!.value}");
-    if (!(_moveController!.value > .30)) {
+    final valueMenu = _getSizeMenu().width / _overallDragAxisExtent;
+    // debugPrint("_getSizeMenu().width====> ${_getSizeMenu().width}");
+    // debugPrint("context.screenSize().width====> ${context.screenSize().width}");
+    // debugPrint("_overallDragAxisExtent====> $_overallDragAxisExtent");
+    // debugPrint("valueMenu====> $valueMenu");
+    // debugPrint("_moveController!.value====> ${_moveController!.value}");
+    if (!(_moveController!.value > valueMenu / 2)) {
       _moveController!.value = .0;
       _dragExtent = 0.0;
     }
@@ -132,12 +132,16 @@ class _WidgetItemSwipeOptionState extends State<WidgetItemSwipeOption> with Tick
         ? () {
             _moveController!.reverse();
             // _dragExtent = 0.0;
-            _dragUnderway = false;
             setState(() {
               _updateMoveAnimation();
             });
           }
         : null);
+  }
+
+  Size _getSizeMenu() {
+    RenderBox renderBox = globalKeyMenu.currentContext!.findRenderObject() as RenderBox;
+    return renderBox.size;
   }
 
   @override
@@ -152,7 +156,6 @@ class _WidgetItemSwipeOptionState extends State<WidgetItemSwipeOption> with Tick
           ? () {
               _moveController!.reverse();
               // _dragExtent = 0.0;
-              _dragUnderway = false;
               setState(() {
                 _updateMoveAnimation();
               });
@@ -161,7 +164,7 @@ class _WidgetItemSwipeOptionState extends State<WidgetItemSwipeOption> with Tick
       child: CardTile(
           moveAnimation: _moveAnimation,
           controller: _moveController!,
-          background: widget.menu,
+          childMenu: widget.menu.call(context, globalKeyMenu),
           borderRadius: widget.borderRadius,
           color: widget.color,
           child: widget.child),
@@ -169,15 +172,10 @@ class _WidgetItemSwipeOptionState extends State<WidgetItemSwipeOption> with Tick
   }
 
   @override
-  bool get wantKeepAlive => _moveController?.isAnimating == true || _resizeController?.isAnimating == true;
+  bool get wantKeepAlive => _moveController?.isAnimating == true;
 
   double get _overallDragAxisExtent {
     final Size size = context.size!;
-    // final double threshold = widget.swipeThreshold;
-
-    // ///TODO: changed: DONE
-    // return widget.swipeToTrigger ? size.width * threshold : size.width;
-
-    return size.width / 3;
+    return size.width;
   }
 }

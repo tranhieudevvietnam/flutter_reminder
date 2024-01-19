@@ -2,6 +2,7 @@ import 'package:dynamic_icon_flutter/dynamic_icon_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_reminder/contants/constant_logo_app.dart';
 
 import 'modules/reminder/page_reminder_export.dart' as reminder;
 import 'utils/components/cache/component_cache_data.dart';
@@ -12,7 +13,7 @@ void main() async {
 
   await ComponentCacheData.instant.initCache();
   await ComponentLanguageCode.instant.init();
-
+  await ConstantLogoApp.instant.intData();
 
   runApp(const MyApp());
 }

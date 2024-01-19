@@ -1,4 +1,6 @@
 PODS:
+  - dynamic_icon_flutter (0.0.7):
+    - Flutter
   - Firebase/CoreOnly (10.18.0):
     - FirebaseCore (= 10.18.0)
   - Firebase/Crashlytics (10.18.0):
@@ -67,6 +69,7 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
+  - dynamic_icon_flutter (from `.symlinks/plugins/dynamic_icon_flutter/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - Flutter (from `Flutter`)
@@ -89,6 +92,8 @@ SPEC REPOS:
     - PromisesSwift
 
 EXTERNAL SOURCES:
+  dynamic_icon_flutter:
+    :path: ".symlinks/plugins/dynamic_icon_flutter/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
   firebase_crashlytics:
@@ -101,6 +106,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
 
 SPEC CHECKSUMS:
+  dynamic_icon_flutter: 8ef1720e1be115981dc0b87abad2b24d51c4b642
   Firebase: 414ad272f8d02dfbf12662a9d43f4bba9bec2a06
   firebase_core: 0af4a2b24f62071f9bf283691c0ee41556dcb3f5
   firebase_crashlytics: 4b91b8ad60ee7c168fe88979f84c9573a729de7a

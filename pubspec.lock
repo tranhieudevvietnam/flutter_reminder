@@ -580,6 +580,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.3"
+  reorderables:
+    dependency: "direct main"
+    description:
+      path: "packages/reorderables"
+      relative: true
+    source: path
+    version: "0.6.0"
   shared_preferences:
     dependency: transitive
     description:
@@ -713,15 +720,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
-  swipeable_tile:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "52054091580deb3c24ef1242238ce99a48d61c79"
-      url: "https://github.com/tranhieudevvietnam/flutter_swipeable_tile.git"
-    source: git
-    version: "2.0.0+3"
   term_glyph:
     dependency: transitive
     description:

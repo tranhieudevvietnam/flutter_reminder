@@ -38,12 +38,24 @@ class $AssetsIconsGen {
   /// File path: assets/icons/info.svg
   SvgGenImage get info => const SvgGenImage('assets/icons/info.svg');
 
+  /// File path: assets/icons/menu_row.svg
+  SvgGenImage get menuRow => const SvgGenImage('assets/icons/menu_row.svg');
+
   /// File path: assets/icons/search.svg
   SvgGenImage get search => const SvgGenImage('assets/icons/search.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values =>
-      [add, all, arrowRight, calenderOrigen, delete, iconColumn, info, search];
+  List<SvgGenImage> get values => [
+        add,
+        all,
+        arrowRight,
+        calenderOrigen,
+        delete,
+        iconColumn,
+        info,
+        menuRow,
+        search
+      ];
 }
 
 class Assets {

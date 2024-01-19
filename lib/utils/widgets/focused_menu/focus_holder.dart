@@ -5,7 +5,7 @@ import 'focused_datails.dart';
 
 class FocusedHolder extends StatefulWidget {
   // final Widget child;
-  final Widget Function(BuildContext context) buildChild;
+  final Widget Function(BuildContext context, Function() onLongPress) buildChild;
   final BuildChildMenu childMenu;
 
   const FocusedHolder({
@@ -38,13 +38,20 @@ class _FocusedHolderState extends State<FocusedHolder> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    // return GestureDetector(
+    //   key: containerKey,
+    //   onLongPress: () async {
+    //     await HapticFeedback.mediumImpact();
+    //     await openMenu(context);
+    //   },
+    //   child: widget.buildChild.call(context),
+    // );
+    return Container(
       key: containerKey,
-      onLongPress: () async {
+      child: widget.buildChild.call(context, () async {
         await HapticFeedback.mediumImpact();
         await openMenu(context);
-      },
-      child: widget.buildChild.call(context),
+      }),
     );
   }
 
@@ -66,6 +73,7 @@ class _FocusedHolderState extends State<FocusedHolder> {
               // child: widget.child,
               child: widget.buildChild.call(
                 context,
+                () {},
               ),
             ),
           );

@@ -5,7 +5,7 @@ class CardTile extends StatelessWidget {
   final Animation<Offset> moveAnimation;
   final AnimationController controller;
   final Widget child;
-  final Widget background;
+  final Widget childMenu;
   final double borderRadius;
   final Color color;
 
@@ -14,7 +14,7 @@ class CardTile extends StatelessWidget {
     required this.moveAnimation,
     required this.controller,
     required this.child,
-    required this.background,
+    required this.childMenu,
     required this.borderRadius,
     required this.color,
   }) : super(key: key);
@@ -23,14 +23,14 @@ class CardTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        if (!moveAnimation.isDismissed)
-          Positioned.fill(
-            left: 10,
-            top: 1,
-            right: 1,
-            bottom: 1,
-            child: background,
-          ),
+        // if (!moveAnimation.isDismissed)
+        Positioned.fill(
+          left: 10,
+          top: 1,
+          right: 1,
+          bottom: 1,
+          child: childMenu,
+        ),
 
         SlideTransition(
           position: moveAnimation,

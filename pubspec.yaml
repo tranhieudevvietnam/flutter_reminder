@@ -36,8 +36,8 @@ dependencies:
     path: /Volumes/coi-ssd/Github/flutter_component
   dynamic_icon_flutter:
     path: ./packages/dynamic_icon_flutter
-  swipeable_tile:
-    git: https://github.com/tranhieudevvietnam/flutter_swipeable_tile.git
+  reorderables:
+    path: ./packages/reorderables
 
   flutter_svg: ^2.0.5
 

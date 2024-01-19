@@ -34,11 +34,12 @@
         <!-- The activity-alias are your alternatives icons and name of your app, the default one must be enabled (and the others disabled) and the name must be ".DEFAULT". All the names of your activity-alias' name must begin with a dot. -->
 
         <!-- FOR NOW USE "ic_launcher_cn_18" AS ALTERNATIVE ICON NAME -->
-        <activity-alias
+        <!-- <activity-alias
       android:label="Remider Notes"
       android:icon="@mipmap/ic_launcher_cn_18"
       android:name=".ic_launcher_cn_18"
       android:enabled="false"
+      android:exported="true"
       android:targetActivity=".MainActivity"
     >
             <meta-data
@@ -53,13 +54,14 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity-alias>
+        </activity-alias> -->
         <!-- FOR NOW USE "ic_launcher_cn_19" AS ALTERNATIVE ICON NAME -->
-        <activity-alias
+        <!-- <activity-alias
       android:label="Remider Notes"
       android:icon="@mipmap/ic_launcher_cn_19"
       android:name=".ic_launcher_cn_19"
       android:enabled="false"
+      android:exported="true"
       android:targetActivity=".MainActivity"
     >
             <meta-data
@@ -74,7 +76,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity-alias>
+        </activity-alias> -->
 
 
     </application>

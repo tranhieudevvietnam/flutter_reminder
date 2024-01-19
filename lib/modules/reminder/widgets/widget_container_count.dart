@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_reminder/utils/gen/colors.gen.dart';
 import 'package:flutter_reminder/utils/gen/style_font.dart';
 
-class WidgetContainerCount extends StatelessWidget {
-  const WidgetContainerCount({super.key, required this.icon, required this.text, required this.count});
+class WidgetContainerTotalCount extends StatelessWidget {
+  const WidgetContainerTotalCount({super.key, required this.icon, required this.text, required this.count});
   final Widget icon;
   final String text;
   final num count;
