@@ -36,8 +36,6 @@ dependencies:
     path: /Volumes/coi-ssd/Github/flutter_component
   dynamic_icon_flutter:
     path: ./packages/dynamic_icon_flutter
-  reorderables:
-    path: ./packages/reorderables
 
   flutter_svg: ^2.0.5
 

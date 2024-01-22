@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_component/flutter_component.dart';
 import 'package:flutter_reminder/utils/widgets/swipe_option/card_tile.dart';
 
-typedef BuildWidget = Widget Function(BuildContext context, GlobalKey? globalKey);
+typedef BuildWidget = Widget Function(BuildContext context, Function()? onClose, GlobalKey? globalKey);
 
 class WidgetItemSwipeOption extends StatefulWidget {
   const WidgetItemSwipeOption({
@@ -26,7 +26,9 @@ class WidgetItemSwipeOption extends StatefulWidget {
 
 class _WidgetItemSwipeOptionState extends State<WidgetItemSwipeOption> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   AnimationController? _moveController;
+  late AnimationController _deleteController;
   late Animation<Offset> _moveAnimation;
+  late Animation<double> _deleteAnimation;
 
   double _dragExtent = 0.0;
 
@@ -38,6 +40,12 @@ class _WidgetItemSwipeOptionState extends State<WidgetItemSwipeOption> with Tick
       ..addStatusListener(
         _handleDismissStatusChanged,
       );
+    _deleteController = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
+
+    _deleteAnimation = Tween<double>(begin: 1, end: .5).animate(_deleteController)
+      ..addListener(() {
+        setState(() {});
+      });
     _updateMoveAnimation();
 
     super.initState();
@@ -55,9 +63,17 @@ class _WidgetItemSwipeOptionState extends State<WidgetItemSwipeOption> with Tick
     });
   }
 
+  @override
+  void dispose() {
+    _moveController?.dispose();
+    _deleteController.dispose();
+    super.dispose();
+  }
+
   Future<void> _handleDismissStatusChanged(AnimationStatus status) async {
     // debugPrint("status=====>$status");
     if (status == AnimationStatus.dismissed) {
+      _deleteController.reverse();
       _dragExtent = 0.0;
       // _moveController!.value = .0;
       setState(() {
@@ -87,7 +103,6 @@ class _WidgetItemSwipeOptionState extends State<WidgetItemSwipeOption> with Tick
   }
 
   void _handleDragStart(DragStartDetails details) {
-    
     setState(() {
       _updateMoveAnimation();
     });
@@ -106,8 +121,8 @@ class _WidgetItemSwipeOptionState extends State<WidgetItemSwipeOption> with Tick
     }
     final value = _dragExtent.abs() / (_overallDragAxisExtent / 4);
     if (!_moveController!.isAnimating) {
-      debugPrint(" _dragExtent ===>$_dragExtent");
-      debugPrint(" _dragExtent.abs() / _overallDragAxisExtent ===>$value");
+      // debugPrint(" _dragExtent ===>$_dragExtent");
+      // debugPrint(" _dragExtent.abs() / _overallDragAxisExtent ===>$value");
       _moveController!.value = value;
     }
   }
@@ -161,18 +176,35 @@ class _WidgetItemSwipeOptionState extends State<WidgetItemSwipeOption> with Tick
               });
             }
           : null,
-      child: CardTile(
-          moveAnimation: _moveAnimation,
-          controller: _moveController!,
-          childMenu: widget.menu.call(context, globalKeyMenu),
-          borderRadius: widget.borderRadius,
-          color: widget.color,
-          child: widget.child),
+      child: Transform.scale(
+        scale: _deleteAnimation.value,
+        child: CardTile(
+            moveAnimation: _moveAnimation,
+            controller: _moveController!,
+            childMenu: widget.menu.call(
+              context,
+              _moveController!.value > 0.0
+                  ? () {
+                      _deleteController.forward();
+                      _moveController!.reverse();
+
+                      // _dragExtent = 0.0;
+                      setState(() {
+                        _updateMoveAnimation();
+                      });
+                    }
+                  : null,
+              globalKeyMenu,
+            ),
+            borderRadius: widget.borderRadius,
+            color: widget.color,
+            child: widget.child),
+      ),
     );
   }
 
   @override
-  bool get wantKeepAlive => _moveController?.isAnimating == true;
+  bool get wantKeepAlive => _moveController?.isAnimating == true && _deleteController.isAnimating == false;
 
   double get _overallDragAxisExtent {
     final Size size = context.size!;

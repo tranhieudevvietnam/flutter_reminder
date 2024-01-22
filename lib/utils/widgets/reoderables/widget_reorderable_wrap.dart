@@ -123,14 +123,18 @@ class _WidgetReorderableWrapState extends State<WidgetReorderableWrap> with Tick
     final item = widget.listData.removeAt(indexSelected);
     widget.listData.insert(indexTemp, item);
     setState(() {});
-    Future.delayed(const Duration(milliseconds: 500), () {
-      _renderUI();
-    });
+    // Future.delayed(const Duration(milliseconds: 500), () {
+    //   _renderUI();
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    Future.delayed(const Duration(milliseconds: 600), () {
+      _renderUI();
+      debugPrint("_renderUI");
+    });
 
     contextScreen = context;
     debugPrint("height screen ====> ${context.screenSize().height}");
@@ -368,7 +372,7 @@ class _WidgetItemSelectedReorderableWrapState extends State<WidgetItemSelectedRe
       scale: scale,
       child: Card(
         elevation: scale == 1 ? 0 : 8,
-        shadowColor: ColorName.hintext.withOpacity(.3),
+        shadowColor: ColorName.hinText.withOpacity(.3),
         child: widget.buildChild.call(context),
       ),
     );

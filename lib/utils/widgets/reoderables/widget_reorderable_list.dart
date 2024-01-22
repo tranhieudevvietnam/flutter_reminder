@@ -15,6 +15,7 @@ class WidgetCustomListSort<T> extends StatefulWidget {
     this.iconSort,
     this.controller,
     this.header,
+    this.shrinkWrap,
   });
   List<T> listData;
   final BuildChildWidget buildChild;
@@ -22,6 +23,7 @@ class WidgetCustomListSort<T> extends StatefulWidget {
   final Function(List<T> values)? onChange;
   final ScrollController? controller;
   final Widget? header;
+  final bool? shrinkWrap;
 
   @override
   State<WidgetCustomListSort> createState() => _WidgetCustomListSortState<T>();
@@ -37,14 +39,14 @@ class _WidgetCustomListSortState<T> extends State<WidgetCustomListSort> {
         dialogBackgroundColor: Colors.transparent,
         colorScheme: Theme.of(context).colorScheme.copyWith(
               background: Colors.transparent,
-              shadow: ColorName.hintext.withOpacity(.1),
+              shadow: ColorName.hinText.withOpacity(.1),
             ),
       ),
       child: ReorderableListView(
         scrollController: widget.controller,
         proxyDecorator: proxyDecorator,
         header: widget.header,
-        shrinkWrap: widget.controller != null,
+        shrinkWrap: widget.shrinkWrap ?? false,
         children: List.generate(
           widget.listData.length,
           (index) => Container(

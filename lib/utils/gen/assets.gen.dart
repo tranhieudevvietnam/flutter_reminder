@@ -20,6 +20,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/all.svg
   SvgGenImage get all => const SvgGenImage('assets/icons/all.svg');
 
+  /// File path: assets/icons/all_done.svg
+  SvgGenImage get allDone => const SvgGenImage('assets/icons/all_done.svg');
+
   /// File path: assets/icons/arrow_right.svg
   SvgGenImage get arrowRight =>
       const SvgGenImage('assets/icons/arrow_right.svg');
@@ -27,6 +30,13 @@ class $AssetsIconsGen {
   /// File path: assets/icons/calender_origen.svg
   SvgGenImage get calenderOrigen =>
       const SvgGenImage('assets/icons/calender_origen.svg');
+
+  /// File path: assets/icons/check_active.svg
+  SvgGenImage get checkActive =>
+      const SvgGenImage('assets/icons/check_active.svg');
+
+  /// File path: assets/icons/check_none.svg
+  SvgGenImage get checkNone => const SvgGenImage('assets/icons/check_none.svg');
 
   /// File path: assets/icons/delete.svg
   SvgGenImage get delete => const SvgGenImage('assets/icons/delete.svg');
@@ -41,6 +51,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/menu_row.svg
   SvgGenImage get menuRow => const SvgGenImage('assets/icons/menu_row.svg');
 
+  /// File path: assets/icons/remove.svg
+  SvgGenImage get remove => const SvgGenImage('assets/icons/remove.svg');
+
   /// File path: assets/icons/search.svg
   SvgGenImage get search => const SvgGenImage('assets/icons/search.svg');
 
@@ -48,12 +61,16 @@ class $AssetsIconsGen {
   List<SvgGenImage> get values => [
         add,
         all,
+        allDone,
         arrowRight,
         calenderOrigen,
+        checkActive,
+        checkNone,
         delete,
         iconColumn,
         info,
         menuRow,
+        remove,
         search
       ];
 }

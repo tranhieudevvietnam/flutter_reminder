@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_component/widgets/widget_animation_click.dart';
 import 'package:flutter_reminder/modules/reminder/data/data_reminder.dart';
+import 'package:flutter_reminder/modules/reminder/page_home_edit.dart';
+import 'package:flutter_reminder/modules/reminder/page_input_list.dart';
+import 'package:flutter_reminder/modules/reminder/page_input_reminder.dart';
+import 'package:flutter_reminder/utils/components/component_navigation.dart';
+import 'package:flutter_reminder/utils/widgets/dialog/show_bottom_sheet_basic.dart';
 import 'package:flutter_reminder/utils/widgets/reoderables/widget_reorderable_list.dart';
 import 'package:flutter_reminder/modules/reminder/widgets/widget_container_count.dart';
 import 'package:flutter_reminder/utils/gen/assets.gen.dart';
@@ -15,6 +20,7 @@ import 'package:flutter_reminder/utils/widgets/swipe_option/widget_item_swipe_op
 
 import 'data/data_total_count.dart';
 import '../../utils/widgets/reoderables/widget_reorderable_wrap.dart';
+import 'widgets/widget_item_menu_focus.dart';
 
 class PageHome extends StatefulWidget {
   const PageHome({super.key});
@@ -25,21 +31,27 @@ class PageHome extends StatefulWidget {
 
 class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin {
   List<DataTotalCount> listTotal = [
-    DataTotalCount(title: "Today", value: 0, icon: const WidgetIconCalenderCurrent()),
+    DataTotalCount(
+        title: "Today",
+        value: 0,
+        icon: WidgetIconCalenderCurrent(
+          dateTime: DateTime.now(),
+        )),
+    DataTotalCount(
+        title: "Yesterday",
+        value: 0,
+        icon: WidgetIconCalenderCurrent(
+          color: Colors.red,
+          dateTime: DateTime.now().add(const Duration(days: -1)),
+        )),
     DataTotalCount(title: "Scheluded", value: 0, icon: Assets.icons.calenderOrigen.svg(width: 40, height: 40)),
     DataTotalCount(title: "All", value: 0, icon: Assets.icons.all.svg(width: 40, height: 40)),
+    DataTotalCount(title: "Done", value: 0, icon: Assets.icons.allDone.svg(width: 40, height: 40)),
   ];
   List<DataReminder> listReminder = [
     DataReminder(color: ColorName.colorOrigen, title: "Reminders", value: 1),
     DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-    DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-    DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-    DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-    DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-    DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-    DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-    DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-    DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
+    DataReminder(color: ColorName.blue, title: "Reminders3", value: 3),
   ];
 
   ScrollController scrollController = ScrollController();
@@ -100,15 +112,35 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
               builder: (ctx, value, child) => Align(
                 alignment: Alignment.centerRight,
                 child: Container(
-                  width: context.screenSize().width,
-                  padding: EdgeInsets.only(bottom: 10, top: paddingScreen.top + 16, left: 16, right: 16),
+                  padding: EdgeInsets.only(top: paddingScreen.top),
                   decoration: BoxDecoration(
                       color: Colors.white.withOpacity(value),
-                      border: Border(bottom: BorderSide(color: ColorName.hintext.withOpacity(value / 3), width: 0.3))),
-                  child: Text(
-                    'Edit',
-                    textAlign: TextAlign.end,
-                    style: StyleFont.medium(17).copyWith(color: ColorName.blue),
+                      border: Border(bottom: BorderSide(color: ColorName.hinText.withOpacity(value / 3), width: 0.3))),
+                  child: Row(
+                    children: [
+                      const Expanded(child: SizedBox()),
+                      WidgetAnimationClick(
+                        onTap: () async {
+                          List<DataTotalCount>? resultEdit = await ComponentNavigation.nextPage(
+                            context: context,
+                            child: PageHomeEdit(listReminder: listReminder, listTotal: listTotal.map((e) => e.title).toList()),
+                            animation: TypeAnimation.edit,
+                          );
+                          if (resultEdit != null) {
+                            listTotal = resultEdit;
+                          }
+                          setState(() {});
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(16).copyWith(bottom: 10),
+                          child: Text(
+                            'Edit',
+                            textAlign: TextAlign.end,
+                            style: StyleFont.medium(17).copyWith(color: ColorName.blue),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -145,7 +177,7 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
                               Text(
                                 'Search',
                                 textAlign: TextAlign.center,
-                                style: StyleFont.medium(17).copyWith(color: ColorName.hintext, height: 1.0),
+                                style: StyleFont.medium(17).copyWith(color: ColorName.hinText, height: 1.0),
                               ),
                             ],
                           ),
@@ -177,7 +209,7 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
                         eventCloseShowMores.add({"$index": event});
                       });
                     },
-                    menu: (context, globalKey) => Container(
+                    menu: (context, onClose, globalKey) => Container(
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.only(topRight: Radius.circular(12), bottomRight: Radius.circular(12)),
                         color: Colors.red,
@@ -186,13 +218,23 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           WidgetAnimationClick(
-                            onTap: () {},
-                            child: Padding(
+                            onTap: () async {
+                              onClose?.call();
+                              await Future.delayed(
+                                const Duration(milliseconds: 250),
+                              );
+                              setState(() {
+                                listReminder.removeAt(index);
+                              });
+                            },
+                            child: Container(
                               key: globalKey,
                               padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: Text(
-                                "Delete",
-                                style: StyleFont.medium().copyWith(color: Colors.white),
+                              child: Center(
+                                child: Text(
+                                  "Delete",
+                                  style: StyleFont.medium().copyWith(color: Colors.white),
+                                ),
                               ),
                             ),
                           ),
@@ -240,7 +282,7 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
                                           padding: const EdgeInsets.symmetric(horizontal: 5).copyWith(left: 10),
                                           child: Text(
                                             "${listReminder[index].value}",
-                                            style: StyleFont.regular().copyWith(color: ColorName.hintext, height: 1.0),
+                                            style: StyleFont.regular().copyWith(color: ColorName.hinText, height: 1.0),
                                           ),
                                         ),
                                         iconSort
@@ -266,7 +308,7 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
                                   onTap: () {
                                     onClose.call();
                                   },
-                                  child: _buildItemMenuFocus(
+                                  child: WidgetItemMenuFocus(
                                     title: "Display list information",
                                     color: ColorName.text,
                                     icon: Assets.icons.info.svg(width: 20),
@@ -275,13 +317,13 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
                                 Container(
                                   width: ctx.screenSize().width / 2,
                                   height: .3,
-                                  color: ColorName.hintext,
+                                  color: ColorName.hinText,
                                 ),
                                 WidgetAnimationClick(
                                   onTap: () {
                                     onClose.call();
                                   },
-                                  child: _buildItemMenuFocus(
+                                  child: WidgetItemMenuFocus(
                                     title: "Delete",
                                     color: Colors.red,
                                     icon: Assets.icons.delete.svg(
@@ -298,191 +340,6 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
                 ),
               ),
             ),
-            // Expanded(
-            //   child: SingleChildScrollView(
-            //     controller: scrollController,
-            //     padding: const EdgeInsets.symmetric(horizontal: 16).copyWith(top: 4, bottom: 50),
-            //     physics: const BouncingScrollPhysics(),
-            //     child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         ValueListenableBuilder<double>(
-            //           valueListenable: opacityAppBar,
-            //           builder: (context, value, child) => Container(
-            //             width: context.screenSize().width,
-            //             height: 40 - (40 * value),
-            //             margin: const EdgeInsets.only(top: 4, bottom: 24),
-            //             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-            //             decoration: ShapeDecoration(
-            //               color: const Color(0xFFE3E3E8),
-            //               shape: RoundedRectangleBorder(
-            //                 borderRadius: BorderRadius.circular(10),
-            //               ),
-            //             ),
-            //             child: Row(
-            //               mainAxisSize: MainAxisSize.min,
-            //               mainAxisAlignment: MainAxisAlignment.start,
-            //               crossAxisAlignment: CrossAxisAlignment.center,
-            //               children: [
-            //                 Assets.icons.search.svg(),
-            //                 const SizedBox(width: 4),
-            //                 Text(
-            //                   'Search',
-            //                   textAlign: TextAlign.center,
-            //                   style: StyleFont.medium(17).copyWith(color: ColorName.hintext, height: 1.0),
-            //                 ),
-            //               ],
-            //             ),
-            //           ),
-            //         ),
-            //         WidgetReorderableWrap(
-            //           listData: listTotal,
-            //           buildChild: (context, index) => WidgetContainerTotalCount(
-            //             count: listTotal[index].value,
-            //             text: listTotal[index].title,
-            //             icon: listTotal[index].icon,
-            //           ),
-            //         ),
-            //         Padding(
-            //           padding: const EdgeInsets.symmetric(vertical: 10),
-            //           child: Text(
-            //             "My Lists",
-            //             style: StyleFont.bold(22),
-            //           ),
-            //         ),
-            //         ...List.generate(
-            //           listReminder.length,
-            //           (index) => Padding(
-            //             padding: const EdgeInsets.only(bottom: 10),
-            //             child: WidgetItemSwipeOption(
-            //               color: Colors.red,
-            //               borderRadius: 14,
-            //               callBackClose: (event) {
-            //                 setState(() {
-            //                   eventCloseShowMores.add({"$index": event});
-            //                 });
-            //               },
-            //               menu: (context, globalKey) => Container(
-            //                 decoration: const BoxDecoration(
-            //                   borderRadius: BorderRadius.only(topRight: Radius.circular(12), bottomRight: Radius.circular(12)),
-            //                   color: Colors.red,
-            //                 ),
-            //                 child: Row(
-            //                   mainAxisAlignment: MainAxisAlignment.end,
-            //                   children: [
-            //                     WidgetAnimationClick(
-            //                       onTap: () {},
-            //                       child: Padding(
-            //                         key: globalKey,
-            //                         padding: const EdgeInsets.symmetric(horizontal: 16),
-            //                         child: Text(
-            //                           "Delete",
-            //                           style: StyleFont.medium().copyWith(color: Colors.white),
-            //                         ),
-            //                       ),
-            //                     ),
-            //                   ],
-            //                 ),
-            //               ),
-            //               child: FocusedHolder(
-            //                 buildChild: (context, onLongPress) => Container(
-            //                   // margin: const EdgeInsets.only(bottom: 12),
-            //                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            //                   clipBehavior: Clip.antiAlias,
-            //                   decoration: ShapeDecoration(
-            //                     color: Colors.white,
-            //                     shape: RoundedRectangleBorder(
-            //                       borderRadius: BorderRadius.circular(12),
-            //                     ),
-            //                   ),
-            //                   child: Row(
-            //                     children: [
-            //                       Expanded(
-            //                         child: Row(
-            //                           children: [
-            //                             WidgetIconItemReminder(
-            //                               color: listReminder[index].color,
-            //                             ),
-            //                             const SizedBox(
-            //                               width: 10,
-            //                             ),
-            //                             Expanded(
-            //                               child: Text(
-            //                                 listReminder[index].title,
-            //                                 maxLines: 1,
-            //                                 overflow: TextOverflow.ellipsis,
-            //                                 style: StyleFont.regular(),
-            //                               ),
-            //                             ),
-            //                           ],
-            //                         ),
-            //                       ),
-            //                       Row(
-            //                         children: [
-            //                           Padding(
-            //                             padding: const EdgeInsets.symmetric(horizontal: 5),
-            //                             child: Text(
-            //                               "${listReminder[index].value}",
-            //                               style: StyleFont.regular().copyWith(color: ColorName.hintext, height: 1.0),
-            //                             ),
-            //                           ),
-            //                           Assets.icons.arrowRight.svg()
-            //                         ],
-            //                       )
-            //                     ],
-            //                   ),
-            //                 ),
-            //                 childMenu: (ctx, globalKey, onClose) {
-            //                   return Container(
-            //                     key: globalKey,
-            //                     width: ctx.screenSize().width / 2,
-            //                     decoration: BoxDecoration(
-            //                       borderRadius: BorderRadius.circular(16),
-            //                       color: Colors.white,
-            //                     ),
-            //                     child: Column(
-            //                       children: [
-            //                         WidgetAnimationClick(
-            //                           onTap: () {
-            //                             onClose.call();
-            //                           },
-            //                           child: _buildItemMenuFocus(
-            //                             title: "Display list information",
-            //                             color: ColorName.text,
-            //                             icon: Assets.icons.info.svg(width: 20),
-            //                           ),
-            //                         ),
-            //                         Container(
-            //                           width: ctx.screenSize().width / 2,
-            //                           height: .3,
-            //                           color: ColorName.hintext,
-            //                         ),
-            //                         WidgetAnimationClick(
-            //                           onTap: () {
-            //                             onClose.call();
-            //                           },
-            //                           child: _buildItemMenuFocus(
-            //                             title: "Delete",
-            //                             color: Colors.red,
-            //                             icon: Assets.icons.delete.svg(
-            //                               color: Colors.red,
-            //                               width: 20,
-            //                             ),
-            //                           ),
-            //                         ),
-            //                       ],
-            //                     ),
-            //                   );
-            //                 },
-            //               ),
-            //             ),
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-
             ValueListenableBuilder<double>(
               valueListenable: opacityBottom,
               builder: (context, value, child) => Container(
@@ -490,26 +347,37 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
                 decoration: BoxDecoration(
                     color: Colors.white.withOpacity(value),
                     border: Border(
-                      top: BorderSide(color: ColorName.hintext.withOpacity(value / 3), width: .3),
+                      top: BorderSide(color: ColorName.hinText.withOpacity(value / 3), width: .3),
                     )),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Assets.icons.add.svg(),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "New Reminder",
-                          style: StyleFont.bold(18).copyWith(color: ColorName.blue, height: 1.0),
-                        )
-                      ],
+                    WidgetAnimationClick(
+                      onTap: () {
+                        ShowBottomSheetBasic.instant.show(context: context, child: const PageInputReminder());
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Assets.icons.add.svg(),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "New Reminder",
+                            style: StyleFont.bold(18).copyWith(color: ColorName.blue, height: 1.0),
+                          )
+                        ],
+                      ),
                     ),
-                    Text(
-                      "Add List",
-                      style: StyleFont.regular(18).copyWith(color: ColorName.blue, height: 1.0),
+                    WidgetAnimationClick(
+                      onTap: () {
+                        ShowBottomSheetBasic.instant.show(context: context, child: const PageInputList());
+                      },
+                      child: Text(
+                        "Add List",
+                        style: StyleFont.regular(18).copyWith(color: ColorName.blue, height: 1.0),
+                      ),
                     )
                   ],
                 ),
@@ -517,23 +385,6 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
             )
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildItemMenuFocus({required String title, required Widget icon, Color? color}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              title,
-              style: StyleFont.regular().copyWith(color: color ?? Colors.red),
-            ),
-          ),
-          icon
-        ],
       ),
     );
   }

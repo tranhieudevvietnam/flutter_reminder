@@ -15,6 +15,8 @@ void main() async {
   await ComponentLanguageCode.instant.init();
   await ConstantLogoApp.instant.intData();
 
+
+
   runApp(const MyApp());
 }
 

@@ -3,9 +3,9 @@ import 'package:flutter_reminder/utils/gen/colors.gen.dart';
 import 'package:flutter_reminder/utils/gen/style_font.dart';
 
 class WidgetIconCalenderCurrent extends StatelessWidget {
-  const WidgetIconCalenderCurrent({
-    super.key,
-  });
+  const WidgetIconCalenderCurrent({super.key, required this.dateTime, this.color});
+  final DateTime dateTime;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class WidgetIconCalenderCurrent extends StatelessWidget {
       width: 40,
       height: 40,
       decoration: ShapeDecoration(
-        color: ColorName.blue,
+        color: color?? ColorName.blue,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(100),
         ),
@@ -31,14 +31,14 @@ class WidgetIconCalenderCurrent extends StatelessWidget {
             height: 15,
             margin: const EdgeInsets.only(top: 6, bottom: 2, left: 2, right: 2),
             decoration: ShapeDecoration(
-              color: ColorName.blue,
+              color: color?? ColorName.blue,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
             child: Center(
               child: Text(
-                "${DateTime.now().day}",
+                "${dateTime.day}",
                 style: StyleFont.bold(10).copyWith(color: Colors.white, fontWeight: FontWeight.w900),
               ),
             ),

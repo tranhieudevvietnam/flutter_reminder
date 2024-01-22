@@ -65,7 +65,7 @@ class _FocusedDetailsState extends State<FocusedDetails> {
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
                 child: Container(
-                  color: (ColorName.hintext).withOpacity(0.5),
+                  color: (ColorName.hinText).withOpacity(0.5),
                 ),
               )),
           Positioned(

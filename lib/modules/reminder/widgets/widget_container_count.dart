@@ -31,7 +31,7 @@ class WidgetContainerTotalCount extends StatelessWidget {
               ),
               Text(
                 text,
-                style: StyleFont.medium(17).copyWith(color: ColorName.hintext),
+                style: StyleFont.medium(17).copyWith(color: ColorName.hinText),
               )
             ],
           ),

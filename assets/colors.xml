@@ -4,7 +4,8 @@
 <resources>
   <color name="primary" >#AB5DD9</color>
   <color name="text" >#000000</color>
-  <color name="hintext" >#8E8E92</color>
+  <color name="border" >#B6B6B9</color>
+  <color name="hinText" >#8E8E92</color>
   <color name="blue" >#0C79FE</color>
   <color name="background" >#F2F2F6</color>
   <color name="colorOrigen" >#FFA032</color>
