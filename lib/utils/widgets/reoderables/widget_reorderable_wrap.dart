@@ -34,7 +34,6 @@ class _WidgetReorderableWrapState extends State<WidgetReorderableWrap> with Tick
   AnimationController? _moveController;
   late Animation<Offset> _moveAnimation;
 
-  late double animationOpacity;
   int indexSelected = -1;
   Size? sizeItemSelected;
   GlobalKey globalKeySelected = GlobalKey();
@@ -49,7 +48,6 @@ class _WidgetReorderableWrapState extends State<WidgetReorderableWrap> with Tick
   void initState() {
     selectedAnimationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
     animation = CurvedAnimation(parent: selectedAnimationController, curve: Curves.easeInOut);
-    animationOpacity = lerpDouble(1, 0.3, animation.value)!;
     animation.addListener(() {
       if (selectedAnimationController.isDismissed == true) {
         indexSelected = -1;
@@ -76,10 +74,16 @@ class _WidgetReorderableWrapState extends State<WidgetReorderableWrap> with Tick
       final renderBoxTemp = element.globalKey.currentContext!.findRenderObject()! as RenderBox;
       Offset offset = renderBoxTemp.localToGlobal(Offset.zero);
       Size size = renderBoxTemp.size;
-      // final offsetTemp = Offset(offset.dx - 16, offset.dy - (renderBoxTemp.size.height - 16 - 8 - 5)); // 8-elevation , 5-margin, 16-padding horizontal
-      element.offset = offset;
+
+      element.offset = _convertOffsetScreen(offset);
       element.size = size;
     }
+  }
+
+  Offset _convertOffsetScreen(Offset offset) {
+    RenderBox? renderBoxTempScreen = context.findRenderObject() as RenderBox;
+    Offset offsetScreen = renderBoxTempScreen.globalToLocal(offset);
+    return offsetScreen;
   }
 
   Future<void> _handleDismissStatusChanged(AnimationStatus status) async {
@@ -96,9 +100,38 @@ class _WidgetReorderableWrapState extends State<WidgetReorderableWrap> with Tick
     streamController.sink.add(null);
   }
 
+  _onChangePosition() {
+    final renderBoxTemp = globalKeySelected.currentContext!.findRenderObject()! as RenderBox;
+    Offset offset = renderBoxTemp.localToGlobal(Offset.zero);
+    final positionDone = _convertOffsetScreen(offset);
+    // debugPrint("onLongPressCancel==1====>$positionDone");
+
+    final indexTemp = widget.listData.indexWhere((element) {
+      // debugPrint("widget.listData======>offset:${element.offset}  size:${element.size}");
+      // debugPrint("positionDone======>$positionDone");
+      if ((element.offset.dx - element.size.width / 2) < positionDone.dx && positionDone.dx < (element.offset.dx + element.size.width / 2)) {
+        if ((element.offset.dy - element.size.height / 2) < positionDone.dy && positionDone.dy < (element.offset.dy + element.size.height / 2)) {
+          return true;
+        }
+        return false;
+      }
+
+      return false;
+    });
+    // debugPrint("index insert====>$indexTemp");
+    if (indexTemp == indexSelected || indexTemp < 0) return;
+    final item = widget.listData.removeAt(indexSelected);
+    widget.listData.insert(indexTemp, item);
+    setState(() {});
+    Future.delayed(const Duration(milliseconds: 500), () {
+      _renderUI();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
     contextScreen = context;
     debugPrint("height screen ====> ${context.screenSize().height}");
     return Listener(
@@ -136,38 +169,11 @@ class _WidgetReorderableWrapState extends State<WidgetReorderableWrap> with Tick
                 return WidgetItemReorderableWrap(
                   buildChild: widget.buildChild,
                   animation: animation,
-                  indexSelected: indexSelected,
                   selectedAnimationController: selectedAnimationController,
-                  animationOpacity: animationOpacity,
                   index: index,
                   globalKey: widget.listData[index].globalKey,
                   onLongPressCancel: () {
-                    final renderBoxTemp = globalKeySelected.currentContext!.findRenderObject()! as RenderBox;
-                    Offset offset = renderBoxTemp.localToGlobal(Offset.zero);
-                    final positionDone = offset;
-                    // debugPrint("onLongPressCancel==1====>$positionDone");
-
-                    final indexTemp = widget.listData.indexWhere((element) {
-                      // debugPrint("widget.listData======>offset:${element.offset}  size:${element.size}");
-
-                      if ((element.offset.dx - element.offset.dx / 3) < positionDone.dx &&
-                          positionDone.dx < (element.offset.dx + renderBoxTemp.size.width)) {
-                        if ((element.offset.dy - element.offset.dy / 3) < positionDone.dy &&
-                            positionDone.dy < (element.offset.dy + element.offset.dy / 3)) {
-                          return true;
-                        }
-                        return false;
-                      }
-                      return false;
-                    });
-                    // debugPrint("index insert====>$indexTemp");
-                    if (indexTemp == index || indexTemp < 0) return;
-                    final item = widget.listData.removeAt(index);
-                    widget.listData.insert(indexTemp, item);
-                    setState(() {});
-                    Future.delayed(const Duration(milliseconds: 500), () {
-                      _renderUI();
-                    });
+                    _onChangePosition();
                   },
                   onLongPress: () {
                     indexSelected = index;
@@ -292,9 +298,7 @@ class WidgetItemReorderableWrap extends StatefulWidget {
       required this.buildChild,
       required this.animation,
       required this.selectedAnimationController,
-      required this.animationOpacity,
       required this.index,
-      required this.indexSelected,
       required this.onLongPressCancel,
       required this.onLongPress,
       required this.globalKey});
@@ -303,8 +307,6 @@ class WidgetItemReorderableWrap extends StatefulWidget {
   final Animation<double> animation;
   final int index;
   final AnimationController selectedAnimationController;
-  final double animationOpacity;
-  final int indexSelected;
   final Function() onLongPress;
   final Function() onLongPressCancel;
   final GlobalKey globalKey;
@@ -314,6 +316,8 @@ class WidgetItemReorderableWrap extends StatefulWidget {
 }
 
 class _WidgetItemReorderableWrapState extends State<WidgetItemReorderableWrap> {
+  bool selected = false;
+
   @override
   Widget build(BuildContext context) {
     // GlobalKey globalKey = GlobalKey();
@@ -321,16 +325,22 @@ class _WidgetItemReorderableWrapState extends State<WidgetItemReorderableWrap> {
       key: widget.globalKey,
       behavior: HitTestBehavior.translucent,
       onLongPressEnd: (details) {
+        setState(() {
+          selected = false;
+        });
         debugPrint("onLongPressEnd=====??");
         widget.selectedAnimationController.reverse();
         widget.onLongPressCancel.call();
       },
       onLongPress: () {
+        setState(() {
+          selected = true;
+        });
         widget.onLongPress.call();
         widget.selectedAnimationController.forward();
       },
       child: Opacity(
-        opacity: widget.indexSelected == widget.index ? widget.animationOpacity : 1.0,
+        opacity: selected ? 0.5 : 1.0,
         child: widget.buildChild.call(context, widget.index),
       ),
     );

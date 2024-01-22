@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_component/widgets/widget_animation_click.dart';
 import 'package:flutter_reminder/modules/reminder/data/data_reminder.dart';
-import 'package:flutter_reminder/modules/reminder/widgets/reoderables/widget_reorderable_list.dart';
+import 'package:flutter_reminder/utils/widgets/reoderables/widget_reorderable_list.dart';
 import 'package:flutter_reminder/modules/reminder/widgets/widget_container_count.dart';
 import 'package:flutter_reminder/utils/gen/assets.gen.dart';
 import 'package:flutter_reminder/utils/gen/colors.gen.dart';
@@ -14,7 +14,7 @@ import 'package:flutter_reminder/utils/widgets/widget_icon_item_reminder.dart';
 import 'package:flutter_reminder/utils/widgets/swipe_option/widget_item_swipe_option.dart';
 
 import 'data/data_total_count.dart';
-import 'widgets/reoderables/widget_reorderable_wrap.dart';
+import '../../utils/widgets/reoderables/widget_reorderable_wrap.dart';
 
 class PageHome extends StatefulWidget {
   const PageHome({super.key});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_reminder/modules/reminder/widgets/reoderables/widget_reorderable_wrap.dart';
+import 'package:flutter_reminder/utils/widgets/reoderables/widget_reorderable_wrap.dart';
 
 class DataTotalCount extends DataReorderableWrap {
   final String title;
