@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_component/flutter_component.dart';
 
 class CardTile extends StatelessWidget {
   final Animation<Offset> moveAnimation;

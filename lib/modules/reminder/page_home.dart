@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_component/widgets/widget_animation_click.dart';
-import 'package:flutter_reminder/modules/reminder/data/data_reminder.dart';
+import 'package:flutter_reminder/contants/constant_data.dart';
+import 'package:flutter_reminder/models/model_list_reminder.dart';
+import 'package:flutter_reminder/models/model_total_count.dart';
 import 'package:flutter_reminder/modules/reminder/page_home_edit.dart';
 import 'package:flutter_reminder/modules/reminder/page_input_list.dart';
 import 'package:flutter_reminder/modules/reminder/page_input_reminder.dart';
+import 'package:flutter_reminder/services/service_data_list_reminder.dart';
+import 'package:flutter_reminder/services/service_data_total_count.dart';
 import 'package:flutter_reminder/utils/components/component_navigation.dart';
 import 'package:flutter_reminder/utils/widgets/dialog/show_bottom_sheet_basic.dart';
 import 'package:flutter_reminder/utils/widgets/reoderables/widget_reorderable_list.dart';
@@ -14,11 +17,9 @@ import 'package:flutter_reminder/utils/gen/colors.gen.dart';
 import 'package:flutter_reminder/utils/gen/style_font.dart';
 import 'package:flutter_component/flutter_component.dart';
 import 'package:flutter_reminder/utils/widgets/focused_menu/focus_holder.dart';
-import 'package:flutter_reminder/utils/widgets/widget_calender_current.dart';
 import 'package:flutter_reminder/utils/widgets/widget_icon_item_reminder.dart';
 import 'package:flutter_reminder/utils/widgets/swipe_option/widget_item_swipe_option.dart';
 
-import 'data/data_total_count.dart';
 import '../../utils/widgets/reoderables/widget_reorderable_wrap.dart';
 import 'widgets/widget_item_menu_focus.dart';
 
@@ -30,29 +31,11 @@ class PageHome extends StatefulWidget {
 }
 
 class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin {
-  List<DataTotalCount> listTotal = [
-    DataTotalCount(
-        title: "Today",
-        value: 0,
-        icon: WidgetIconCalenderCurrent(
-          dateTime: DateTime.now(),
-        )),
-    DataTotalCount(
-        title: "Yesterday",
-        value: 0,
-        icon: WidgetIconCalenderCurrent(
-          color: Colors.red,
-          dateTime: DateTime.now().add(const Duration(days: -1)),
-        )),
-    DataTotalCount(title: "Scheluded", value: 0, icon: Assets.icons.calenderOrigen.svg(width: 40, height: 40)),
-    DataTotalCount(title: "All", value: 0, icon: Assets.icons.all.svg(width: 40, height: 40)),
-    DataTotalCount(title: "Done", value: 0, icon: Assets.icons.allDone.svg(width: 40, height: 40)),
-  ];
-  List<DataReminder> listReminder = [
-    DataReminder(color: ColorName.colorOrigen, title: "Reminders", value: 1),
-    DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-    DataReminder(color: ColorName.blue, title: "Reminders3", value: 3),
-  ];
+  ServiceDataListReminderEvent service = ServiceDataListReminder.instant;
+  ServiceDataTotalCountEvent serviceTotal = ServiceDataTotalCount.instant;
+
+  List<ModelTotalCount> listTotal = [];
+  List<ModelListReminder> listReminder = [];
 
   ScrollController scrollController = ScrollController();
   ValueNotifier<double> opacityAppBar = ValueNotifier(0.0);
@@ -62,6 +45,9 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
 
   @override
   void initState() {
+    listReminder = service.getAll();
+    listTotal = serviceTotal.getAll();
+
     scrollController.addListener(() {
       if (scrollController.position.pixels < 0) {
         opacityAppBar.value = 0.0;
@@ -82,11 +68,16 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
 
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       if (scrollController.position.pixels >= scrollController.position.maxScrollExtent) {
         opacityBottom.value = 0.0;
       } else {
         opacityBottom.value = 1.0;
+      }
+      if (listTotal.isEmpty) {
+        listTotal = ConstantData.instant.listTotal;
+        await serviceTotal.updateAll(listTotal);
+        setState(() {});
       }
     });
   }
@@ -121,13 +112,15 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
                       const Expanded(child: SizedBox()),
                       WidgetAnimationClick(
                         onTap: () async {
-                          List<DataTotalCount>? resultEdit = await ComponentNavigation.nextPage(
+                          List<ModelTotalCount>? resultEdit = await ComponentNavigation.nextPage(
                             context: context,
-                            child: PageHomeEdit(listReminder: listReminder, listTotal: listTotal.map((e) => e.title).toList()),
+                            child: PageHomeEdit(listReminder: listReminder, listTotal: listTotal),
                             animation: TypeAnimation.edit,
                           );
                           if (resultEdit != null) {
                             listTotal = resultEdit;
+                            await service.updateAll(listData: listReminder);
+                            await serviceTotal.updateAll(listTotal);
                           }
                           setState(() {});
                         },
@@ -148,8 +141,12 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: WidgetCustomListSort(
+                child: WidgetCustomListSort<ModelListReminder>(
+                  padding: const EdgeInsets.only(bottom: 16),
                   controller: scrollController,
+                  onChange: (values) async {
+                    await service.updateAll(listData: values as List<ModelListReminder>);
+                  },
                   iconSort: Assets.icons.menuRow.svg(),
                   header: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,9 +182,12 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
                       ),
                       WidgetReorderableWrap(
                         listData: listTotal,
+                        onChange: (values) async {
+                          await serviceTotal.updateAll(listTotal);
+                        },
                         buildChild: (context, index) => WidgetContainerTotalCount(
-                          count: listTotal[index].value,
-                          text: listTotal[index].title,
+                          count: listTotal[index].value!,
+                          text: listTotal[index].title!,
                           icon: listTotal[index].icon,
                         ),
                       ),
@@ -223,6 +223,8 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
                               await Future.delayed(
                                 const Duration(milliseconds: 250),
                               );
+                              await service.delete(listReminder[index].id!);
+
                               setState(() {
                                 listReminder.removeAt(index);
                               });
@@ -260,14 +262,14 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
                                       child: Row(
                                         children: [
                                           WidgetIconItemReminder(
-                                            color: listReminder[index].color,
+                                            color: Color(listReminder[index].color!),
                                           ),
                                           const SizedBox(
                                             width: 10,
                                           ),
                                           Expanded(
                                             child: Text(
-                                              listReminder[index].title,
+                                              listReminder[index].title!,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                               style: StyleFont.regular(),
@@ -371,8 +373,12 @@ class _PageHomeState extends State<PageHome> with SingleTickerProviderStateMixin
                       ),
                     ),
                     WidgetAnimationClick(
-                      onTap: () {
-                        ShowBottomSheetBasic.instant.show(context: context, child: const PageInputList());
+                      onTap: () async {
+                        final result = await ShowBottomSheetBasic.instant.show(context: context, child: const PageInputList());
+                        if (result != null) {
+                          listReminder = service.getAll();
+                          setState(() {});
+                        }
                       },
                       child: Text(
                         "Add List",

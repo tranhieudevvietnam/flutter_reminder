@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_component/flutter_component.dart';
 import 'package:flutter_reminder/utils/widgets/swipe_option/card_tile.dart';
 
 typedef BuildWidget = Widget Function(BuildContext context, Function()? onClose, GlobalKey? globalKey);

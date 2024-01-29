@@ -28,8 +28,11 @@ class ColorName {
   /// Color: #8E8E92
   static const Color hinText = Color(0xFF8E8E92);
 
-  /// Color: #AB5DD9
-  static const Color primary = Color(0xFFAB5DD9);
+  /// Color: #0C79FE
+  static const Color primary = Color(0xFF0C79FE);
+
+  /// Color: #E75650
+  static const Color red = Color(0xFFE75650);
 
   /// Color: #000000
   static const Color text = Color(0xFF000000);

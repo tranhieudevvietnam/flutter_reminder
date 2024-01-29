@@ -13,7 +13,7 @@ class WidgetIconCalenderCurrent extends StatelessWidget {
       width: 40,
       height: 40,
       decoration: ShapeDecoration(
-        color: color?? ColorName.blue,
+        color: color ?? ColorName.blue,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(100),
         ),
@@ -31,7 +31,7 @@ class WidgetIconCalenderCurrent extends StatelessWidget {
             height: 15,
             margin: const EdgeInsets.only(top: 6, bottom: 2, left: 2, right: 2),
             decoration: ShapeDecoration(
-              color: color?? ColorName.blue,
+              color: color ?? ColorName.blue,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(2),
               ),

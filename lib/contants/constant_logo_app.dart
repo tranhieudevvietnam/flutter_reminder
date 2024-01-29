@@ -1,6 +1,5 @@
 import 'package:dynamic_icon_flutter/dynamic_icon_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_reminder/utils/components/cache/component_cache_data.dart';
 
 class ModelLogo {
@@ -41,7 +40,7 @@ class ConstantLogoApp {
       await DynamicIconFlutter.setIcon(icon: dataCurrent.valueLogo, listAvailableIcon: listDataLogoApps.map((e) => e.valueLogo).toList());
       debugPrint("App icon change successful");
       return;
-    } on PlatformException catch (e) {
+    }  catch (e) {
       // await DynamicIconFlutter.setAlternateIconName(null);
       debugPrint("Change app icon back to default");
       return;

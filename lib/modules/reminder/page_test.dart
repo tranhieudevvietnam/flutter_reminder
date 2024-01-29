@@ -42,28 +42,28 @@
 
 // class _ReorderableListViewExampleState extends State<ReorderableExample> {
 //   // final List<int> _items = List<int>.generate(50, (int index) => index);
-//   List<DataTotalCount> listTotal = [
-//     DataTotalCount(title: "Today", value: 0, icon: const WidgetIconCalenderCurrent()),
-//     DataTotalCount(title: "Scheluded", value: 0, icon: Assets.icons.calenderOrigen.svg(width: 40, height: 40)),
-//     DataTotalCount(title: "All", value: 0, icon: Assets.icons.all.svg(width: 40, height: 40)),
+//   List<ModelTotalCount> listTotal = [
+//     ModelTotalCount(title: "Today", value: 0, icon: const WidgetIconCalenderCurrent()),
+//     ModelTotalCount(title: "Scheluded", value: 0, icon: Assets.icons.calenderOrigen.svg(width: 40, height: 40)),
+//     ModelTotalCount(title: "All", value: 0, icon: Assets.icons.all.svg(width: 40, height: 40)),
 //   ];
-//   List<DataReminder> listReminder = [
-//     DataReminder(color: ColorName.colorOrigen, title: "Reminders", value: 1),
-//     DataReminder(color: ColorName.blue, title: "Reminders2 Reminders2 Reminders2 Reminders2 Reminders2 Reminders2 Reminders2 ", value: 999),
-//     DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-//     DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-//     DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-//     DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-//     DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-//     DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-//     DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-//     DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-//     DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-//     DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-//     DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-//     DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-//     DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
-//     DataReminder(color: ColorName.blue, title: "Reminders2", value: 2),
+//   List<ModelReminder> listReminder = [
+//     ModelReminder(color: ColorName.colorOrigen, title: "Reminders", value: 1),
+//     ModelReminder(color: ColorName.blue, title: "Reminders2 Reminders2 Reminders2 Reminders2 Reminders2 Reminders2 Reminders2 ", value: 999),
+//     ModelReminder(color: ColorName.blue, title: "Reminders2", value: 2),
+//     ModelReminder(color: ColorName.blue, title: "Reminders2", value: 2),
+//     ModelReminder(color: ColorName.blue, title: "Reminders2", value: 2),
+//     ModelReminder(color: ColorName.blue, title: "Reminders2", value: 2),
+//     ModelReminder(color: ColorName.blue, title: "Reminders2", value: 2),
+//     ModelReminder(color: ColorName.blue, title: "Reminders2", value: 2),
+//     ModelReminder(color: ColorName.blue, title: "Reminders2", value: 2),
+//     ModelReminder(color: ColorName.blue, title: "Reminders2", value: 2),
+//     ModelReminder(color: ColorName.blue, title: "Reminders2", value: 2),
+//     ModelReminder(color: ColorName.blue, title: "Reminders2", value: 2),
+//     ModelReminder(color: ColorName.blue, title: "Reminders2", value: 2),
+//     ModelReminder(color: ColorName.blue, title: "Reminders2", value: 2),
+//     ModelReminder(color: ColorName.blue, title: "Reminders2", value: 2),
+//     ModelReminder(color: ColorName.blue, title: "Reminders2", value: 2),
 //   ];
 
 //   List<Map<String, Function()?>> eventCloseShowMores = [];

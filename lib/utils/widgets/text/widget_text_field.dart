@@ -11,6 +11,7 @@ class WidgetTextField extends StatelessWidget {
     required this.controller,
     this.maxLines,
     this.minLines,
+    this.autofocus,
   });
   final String? hintText;
   final TextStyle? style;
@@ -19,6 +20,7 @@ class WidgetTextField extends StatelessWidget {
   final TextEditingController controller;
   final int? maxLines;
   final int? minLines;
+  final bool? autofocus;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,7 @@ class WidgetTextField extends StatelessWidget {
       style: style ?? StyleFont.regular(),
       maxLines: maxLines,
       minLines: minLines,
+      autofocus: autofocus ?? false,
       decoration: InputDecoration(
           border: InputBorder.none,
           isDense: true,

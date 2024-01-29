@@ -1,8 +1,9 @@
-import 'package:dynamic_icon_flutter/dynamic_icon_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_reminder/contants/constant_logo_app.dart';
+import 'package:flutter_reminder/utils/components/cache/component_cache_hive.dart';
+import 'package:flutter_reminder/utils/gen/colors.gen.dart';
 
 import 'modules/reminder/page_reminder_export.dart' as reminder;
 import 'utils/components/cache/component_cache_data.dart';
@@ -14,8 +15,7 @@ void main() async {
   await ComponentCacheData.instant.initCache();
   await ComponentLanguageCode.instant.init();
   await ConstantLogoApp.instant.intData();
-
-
+  await ComponentCacheHive.instant.init();
 
   runApp(const MyApp());
 }
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: ColorName.primary),
         useMaterial3: true,
       ),
       home: const reminder.PageHome(),

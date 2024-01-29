@@ -3,25 +3,23 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_component/flutter_component.dart';
+import 'package:flutter_reminder/utils/components/cache/component_cache_hive.dart';
 import 'package:flutter_reminder/utils/gen/colors.gen.dart';
 
 typedef BuildChildWidget = Widget Function(BuildContext context, int index);
 
-class DataReorderableWrap {
-  late GlobalKey globalKey;
-  Offset offset;
-  Size size;
-
-  DataReorderableWrap({required this.offset, required this.size}) {
-    globalKey = GlobalKey();
-  }
+abstract class DataReorderableWrap extends ModelHiveDefault {
+  Offset? offset;
+  Size? size;
+  GlobalKey globalKey = GlobalKey();
 }
 
 // ignore: must_be_immutable
 class WidgetReorderableWrap extends StatefulWidget {
-  WidgetReorderableWrap({super.key, required this.listData, required this.buildChild});
+  WidgetReorderableWrap({super.key, required this.listData, required this.buildChild, required this.onChange});
   List<DataReorderableWrap> listData;
   final BuildChildWidget buildChild;
+  final Function(List<DataReorderableWrap> values) onChange;
 
   @override
   State<WidgetReorderableWrap> createState() => _WidgetReorderableWrapState();
@@ -109,8 +107,8 @@ class _WidgetReorderableWrapState extends State<WidgetReorderableWrap> with Tick
     final indexTemp = widget.listData.indexWhere((element) {
       // debugPrint("widget.listData======>offset:${element.offset}  size:${element.size}");
       // debugPrint("positionDone======>$positionDone");
-      if ((element.offset.dx - element.size.width / 2) < positionDone.dx && positionDone.dx < (element.offset.dx + element.size.width / 2)) {
-        if ((element.offset.dy - element.size.height / 2) < positionDone.dy && positionDone.dy < (element.offset.dy + element.size.height / 2)) {
+      if ((element.offset!.dx - element.size!.width / 2) < positionDone.dx && positionDone.dx < (element.offset!.dx + element.size!.width / 2)) {
+        if ((element.offset!.dy - element.size!.height / 2) < positionDone.dy && positionDone.dy < (element.offset!.dy + element.size!.height / 2)) {
           return true;
         }
         return false;
@@ -123,6 +121,7 @@ class _WidgetReorderableWrapState extends State<WidgetReorderableWrap> with Tick
     final item = widget.listData.removeAt(indexSelected);
     widget.listData.insert(indexTemp, item);
     setState(() {});
+    widget.onChange.call(widget.listData);
     // Future.delayed(const Duration(milliseconds: 500), () {
     //   _renderUI();
     // });

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_component/widgets/widget_animation_click.dart';
+import 'package:flutter_reminder/contants/constant_data.dart';
+import 'package:flutter_reminder/models/model_list_reminder.dart';
+import 'package:flutter_reminder/models/model_total_count.dart';
 import 'package:flutter_reminder/utils/gen/gen_export.dart';
 import 'package:flutter_reminder/utils/widgets/check/widget_check_box.dart';
 import 'package:flutter_reminder/utils/widgets/reoderables/widget_reorderable_list.dart';
-import 'package:flutter_reminder/utils/widgets/widget_calender_current.dart';
 import 'package:flutter_reminder/utils/widgets/widget_icon_item_reminder.dart';
 
-import 'data/data_reminder.dart';
-import 'data/data_total_count.dart';
 import 'package:flutter_component/flutter_component.dart';
 
 // ignore: must_be_immutable
 class PageHomeEdit extends StatefulWidget {
   PageHomeEdit({super.key, required this.listReminder, required this.listTotal});
-  List<DataReminder> listReminder;
-  List<String> listTotal;
+  List<ModelListReminder> listReminder;
+  List<ModelTotalCount> listTotal;
   @override
   State<PageHomeEdit> createState() => _PageHomeEditState();
 }
@@ -23,24 +23,8 @@ class _PageHomeEditState extends State<PageHomeEdit> {
   ScrollController scrollController = ScrollController();
   ValueNotifier<double> opacityAppBar = ValueNotifier(0.0);
 
-  List<DataTotalCount> listTotalDefault = [
-    DataTotalCount(
-        title: "Today",
-        value: 0,
-        icon: WidgetIconCalenderCurrent(
-          dateTime: DateTime.now(),
-        )),
-    DataTotalCount(
-        title: "Yesterday",
-        value: 0,
-        icon: WidgetIconCalenderCurrent(
-          color: Colors.red,
-          dateTime: DateTime.now().add(const Duration(days: -1)),
-        )),
-    DataTotalCount(title: "Scheluded", value: 0, icon: Assets.icons.calenderOrigen.svg(width: 40, height: 40)),
-    DataTotalCount(title: "All", value: 0, icon: Assets.icons.all.svg(width: 40, height: 40)),
-    DataTotalCount(title: "Done", value: 0, icon: Assets.icons.allDone.svg(width: 40, height: 40)),
-  ];
+  List<ModelTotalCount> listTotalDefault = ConstantData.instant.listTotalNoneId;
+  List<ModelTotalCount> listTotalChange = [];
 
   @override
   void initState() {
@@ -56,6 +40,12 @@ class _PageHomeEditState extends State<PageHomeEdit> {
         }
       }
     });
+    final listTitleTemp = widget.listTotal.map((e) => e.title).toList();
+
+    listTotalChange = [
+      ...widget.listTotal,
+      ...listTotalDefault.where((element) => !listTitleTemp.contains(element.title)).toList(),
+    ];
 
     super.initState();
   }
@@ -85,7 +75,7 @@ class _PageHomeEditState extends State<PageHomeEdit> {
                         ///TODO: handle done
                         Navigator.pop(
                           context,
-                          listTotalDefault.where((element) => widget.listTotal.contains(element.title)).toList(),
+                          listTotalChange.where((element) => element.selected == true).toList(),
                         );
                       },
                       child: Padding(
@@ -142,7 +132,8 @@ class _PageHomeEditState extends State<PageHomeEdit> {
                     ),
                     WidgetCustomListSort(
                       iconSort: Assets.icons.menuRow.svg(),
-                      listData: listTotalDefault,
+                      listData: listTotalChange,
+                      physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       buildChild: (context, index, iconSort) => Container(
                         padding: const EdgeInsets.symmetric(vertical: 8).copyWith(left: 12),
@@ -159,24 +150,20 @@ class _PageHomeEditState extends State<PageHomeEdit> {
                               child: Row(
                                 children: [
                                   WidgetCheckBox(
-                                    value: widget.listTotal.contains(listTotalDefault[index].title),
+                                    value: listTotalChange[index].selected ?? false,
                                     padding: const EdgeInsets.only(right: 16),
                                     onChange: (value) {
-                                      if (value == true) {
-                                        widget.listTotal.add(listTotalDefault[index].title);
-                                      } else {
-                                        widget.listTotal.remove(listTotalDefault[index].title);
-                                      }
+                                      listTotalChange[index].selected = value;
                                       setState(() {});
                                     },
                                   ),
-                                  listTotalDefault[index].icon,
+                                  listTotalChange[index].icon,
                                   const SizedBox(
                                     width: 10,
                                   ),
                                   Expanded(
                                     child: Text(
-                                      listTotalDefault[index].title,
+                                      listTotalChange[index].title!,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: StyleFont.regular(),
@@ -226,14 +213,14 @@ class _PageHomeEditState extends State<PageHomeEdit> {
                               ),
                             ),
                             WidgetIconItemReminder(
-                              color: widget.listReminder[index].color,
+                              color: Color(widget.listReminder[index].color!),
                             ),
                             const SizedBox(
                               width: 10,
                             ),
                             Expanded(
                               child: Text(
-                                widget.listReminder[index].title,
+                                widget.listReminder[index].title!,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: StyleFont.regular(),

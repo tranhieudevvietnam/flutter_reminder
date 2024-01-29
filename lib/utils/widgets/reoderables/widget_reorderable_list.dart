@@ -15,15 +15,17 @@ class WidgetCustomListSort<T> extends StatefulWidget {
     this.iconSort,
     this.controller,
     this.header,
-    this.shrinkWrap,
+    this.shrinkWrap, this.physics, this.padding,
   });
   List<T> listData;
   final BuildChildWidget buildChild;
   final Widget? iconSort;
-  final Function(List<T> values)? onChange;
+  final Function(dynamic values)? onChange;
   final ScrollController? controller;
   final Widget? header;
   final bool? shrinkWrap;
+  final ScrollPhysics? physics;
+  final EdgeInsets? padding;
 
   @override
   State<WidgetCustomListSort> createState() => _WidgetCustomListSortState<T>();
@@ -43,10 +45,12 @@ class _WidgetCustomListSortState<T> extends State<WidgetCustomListSort> {
             ),
       ),
       child: ReorderableListView(
+        padding: widget.padding,
         scrollController: widget.controller,
         proxyDecorator: proxyDecorator,
         header: widget.header,
         shrinkWrap: widget.shrinkWrap ?? false,
+        physics: widget.physics,
         children: List.generate(
           widget.listData.length,
           (index) => Container(
@@ -69,8 +73,8 @@ class _WidgetCustomListSortState<T> extends State<WidgetCustomListSort> {
             }
             final item = widget.listData.removeAt(oldIndex);
             widget.listData.insert(newIndex, item);
-            widget.onChange?.call(widget.listData);
           });
+          widget.onChange?.call(widget.listData);
         },
       ),
     );
