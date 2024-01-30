@@ -1,6 +1,10 @@
 import 'package:flutter_reminder/models/model_total_count.dart';
 import 'package:uuid/uuid.dart';
 
+enum TypeRepeat { never, everyDay, everyWeek, everyMonth }
+
+enum TypePriority { veryHigh, high, normal, slow }
+
 class ConstantData {
   ConstantData._();
 

@@ -41,6 +41,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/check_none.svg
   SvgGenImage get checkNone => const SvgGenImage('assets/icons/check_none.svg');
 
+  /// File path: assets/icons/datetime.svg
+  SvgGenImage get datetime => const SvgGenImage('assets/icons/datetime.svg');
+
   /// File path: assets/icons/delete.svg
   SvgGenImage get delete => const SvgGenImage('assets/icons/delete.svg');
 
@@ -60,6 +63,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/remove.svg
   SvgGenImage get remove => const SvgGenImage('assets/icons/remove.svg');
 
+  /// File path: assets/icons/repeat.svg
+  SvgGenImage get repeat => const SvgGenImage('assets/icons/repeat.svg');
+
   /// File path: assets/icons/search.svg
   SvgGenImage get search => const SvgGenImage('assets/icons/search.svg');
 
@@ -76,12 +82,14 @@ class $AssetsIconsGen {
         calenderOrigen,
         checkActive,
         checkNone,
+        datetime,
         delete,
         iconColumn,
         info,
         menuRow,
         next,
         remove,
+        repeat,
         search,
         time
       ];
