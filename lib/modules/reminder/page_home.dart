@@ -4,8 +4,6 @@ import 'package:flutter_reminder/contants/constant_data.dart';
 import 'package:flutter_reminder/models/model_list_reminder.dart';
 import 'package:flutter_reminder/models/model_total_count.dart';
 import 'package:flutter_reminder/modules/reminder/page_home_edit.dart';
-import 'package:flutter_reminder/modules/reminder/page_input_list.dart';
-import 'package:flutter_reminder/modules/reminder/page_input_reminder.dart';
 import 'package:flutter_reminder/services/service_data_list_reminder.dart';
 import 'package:flutter_reminder/services/service_data_total_count.dart';
 import 'package:flutter_reminder/utils/components/component_navigation.dart';
@@ -21,6 +19,8 @@ import 'package:flutter_reminder/utils/widgets/widget_icon_item_reminder.dart';
 import 'package:flutter_reminder/utils/widgets/swipe_option/widget_item_swipe_option.dart';
 
 import '../../utils/widgets/reoderables/widget_reorderable_wrap.dart';
+import 'inputs/page_input_list.dart';
+import 'inputs/page_input_reminder.dart';
 import 'widgets/widget_item_menu_focus.dart';
 
 class PageHome extends StatefulWidget {

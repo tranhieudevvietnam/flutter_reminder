@@ -3,10 +3,15 @@ import 'package:flutter_component/widgets/widget_animation_click.dart';
 import 'package:flutter_reminder/utils/gen/gen_export.dart';
 
 class WidgetAppBarInput extends StatelessWidget {
-  const WidgetAppBarInput({super.key, required this.title, required this.onCancel, required this.onAdd});
+  const WidgetAppBarInput({
+    super.key,
+    required this.title,
+    required this.onCancel,
+    this.onSubmit,
+  });
   final String title;
   final Function() onCancel;
-  final Function() onAdd;
+  final Function()? onSubmit;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +23,7 @@ class WidgetAppBarInput extends StatelessWidget {
             onTap: onCancel,
             child: Text(
               "Cancel",
-              style: StyleFont.bold().copyWith(color: ColorName.blue),
+              style: StyleFont.regular().copyWith(color: ColorName.blue),
             ),
           ),
         ),
@@ -33,11 +38,11 @@ class WidgetAppBarInput extends StatelessWidget {
         Expanded(
           flex: 1,
           child: WidgetAnimationClick(
-            onTap: onAdd,
+            onTap: onSubmit,
             child: Text(
               "Add",
               textAlign: TextAlign.right,
-              style: StyleFont.bold().copyWith(color: ColorName.blue),
+              style: StyleFont.regular().copyWith(color: ColorName.blue),
             ),
           ),
         ),

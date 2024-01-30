@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_component/flutter_component.dart';
 import 'package:flutter_component/widgets/widget_animation_click.dart';
 import 'package:flutter_reminder/models/model_list_reminder.dart';
+import 'package:flutter_reminder/modules/reminder/widgets/widget_app_bar_input.dart';
 import 'package:flutter_reminder/services/service_data_list_reminder.dart';
 import 'package:flutter_reminder/utils/gen/gen_export.dart';
 import 'package:flutter_reminder/utils/widgets/text/widget_text_field.dart';
 import 'package:flutter_reminder/utils/widgets/widget_icon_item_reminder.dart';
 import 'package:uuid/uuid.dart';
 
-import 'widgets/widget_app_bar_input.dart';
 
 class PageInputList extends StatefulWidget {
   const PageInputList({super.key});
@@ -66,7 +66,7 @@ class _PageInputListState extends State<PageInputList> {
             children: [
               WidgetAppBarInput(
                 title: "New List",
-                onAdd: () async {
+                onSubmit: () async {
                   await _handleEventAdd.call(context);
                 },
                 onCancel: () {

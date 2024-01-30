@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_component/flutter_component.dart';
 import 'package:flutter_component/widgets/widget_animation_click.dart';
+import 'package:flutter_reminder/modules/reminder/inputs/page_input_detail.dart';
 import 'package:flutter_reminder/modules/reminder/widgets/widget_app_bar_input.dart';
 import 'package:flutter_reminder/modules/reminder/widgets/widget_calender_icon.dart';
 import 'package:flutter_reminder/utils/gen/gen_export.dart';
+import 'package:flutter_reminder/utils/widgets/dialog/show_bottom_sheet_basic.dart';
 import 'package:flutter_reminder/utils/widgets/text/widget_text_field.dart';
 
 class PageInputReminder extends StatefulWidget {
@@ -83,7 +85,7 @@ class _PageInputReminderState extends State<PageInputReminder> with SingleTicker
                   children: [
                     WidgetAppBarInput(
                       title: "New Reminder",
-                      onAdd: () {},
+                      onSubmit: () {},
                       onCancel: () {
                         Navigator.pop(context);
                       },
@@ -188,11 +190,18 @@ class _PageInputReminderState extends State<PageInputReminder> with SingleTicker
                     listDateTime.length,
                     (index) => Expanded(
                           child: WidgetAnimationClick(
-                            onTap: () {
-                              setState(() {
-                                dateTimeSelected = listDateTime[index]['dateTime'];
-                              });
-
+                            onTap: () async {
+                              if (listDateTime[index]['dateTime'] != null) {
+                                setState(() {
+                                  dateTimeSelected = listDateTime[index]['dateTime'];
+                                });
+                              } else {
+                                final result = await ShowBottomSheetBasic.instant.show(
+                                    context: context,
+                                    child: PageInputDetail(
+                                      dateTimeSelected: dateTimeSelected,
+                                    ));
+                              }
                               _controller.reverse();
                             },
                             child: Padding(
