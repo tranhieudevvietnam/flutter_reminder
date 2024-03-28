@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_component/flutter_component.dart';
-import 'package:flutter_component/widgets/widget_animation_click.dart';
 import 'package:flutter_reminder/contants/constant_data.dart';
 import 'package:flutter_reminder/modules/reminder/inputs/views/view_priority.dart';
 import 'package:flutter_reminder/utils/gen/gen_export.dart';
