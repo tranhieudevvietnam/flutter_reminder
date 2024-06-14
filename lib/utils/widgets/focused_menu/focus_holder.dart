@@ -38,14 +38,6 @@ class _FocusedHolderState extends State<FocusedHolder> {
 
   @override
   Widget build(BuildContext context) {
-    // return GestureDetector(
-    //   key: containerKey,
-    //   onLongPress: () async {
-    //     await HapticFeedback.mediumImpact();
-    //     await openMenu(context);
-    //   },
-    //   child: widget.buildChild.call(context),
-    // );
     return Container(
       key: containerKey,
       child: widget.buildChild.call(context, () async {
